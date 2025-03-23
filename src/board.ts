@@ -1,7 +1,24 @@
+import type { Direction } from "./types";
+
 class Cell {
   value: number | null;
   constructor(value = null) {
     this.value = value;
+  }
+}
+
+type Coordinates = {
+  row: number;
+  col: number;
+};
+
+export class BoardTransition {
+  from: Coordinates;
+  to: Coordinates;
+
+  constructor(from: Coordinates, to: Coordinates) {
+    this.from = from;
+    this.to = to;
   }
 }
 
@@ -54,7 +71,7 @@ export class Board {
     }
   }
 
-  move(direction: "up" | "right" | "bottom" | "left") {
+  move(direction: Direction) {
     const transition: any = [
       { values: [] },
       { values: [] },
@@ -64,57 +81,62 @@ export class Board {
 
     switch (direction) {
       case "up":
+        // TODO: Implelemt this
         break;
       case "right":
+        // TODO: Implelemt this
         break;
       case "bottom":
+        // TODO: Implelemt this
         break;
       case "left":
         for (let i = 0; i < this.rows; i++) {
-          const unresolved: (Cell & { index: number })[] = [];
-          const resolved: (Cell & { index: number })[] = [];
+          const unresolved_cells: (Cell & { index: number })[] = [];
+          const resolved_cells: (Cell & { index: number })[] = [];
           const row = this.value[i];
 
           for (let j = 0; j < this.cols; j++) {
             const currentCell = this.value[i][j];
+
             if (currentCell.value === null) {
               continue;
             }
+
             if (
-              unresolved.length &&
-              unresolved[unresolved.length - 1].value === currentCell.value
+              unresolved_cells.length &&
+              unresolved_cells[unresolved_cells.length - 1].value ===
+                currentCell.value
             ) {
-              const newlyResolvedValue = unresolved.pop() as Cell & {
+              const newlyResolvedValue = unresolved_cells.pop() as Cell & {
                 index: number;
               };
               (newlyResolvedValue.value as number) *= 2;
-              resolved.push(newlyResolvedValue);
+              resolved_cells.push(newlyResolvedValue);
             } else {
-              unresolved.push({ value: currentCell.value, index: j });
+              unresolved_cells.push({ value: currentCell.value, index: j });
             }
           }
 
-          while (unresolved.length) {
-            const current = unresolved.shift();
-            current && resolved.push(current);
+          while (unresolved_cells.length) {
+            const current = unresolved_cells.shift();
+            current && resolved_cells.push(current);
           }
 
-          console.log("stack is", unresolved);
-          console.log("queue is", resolved);
           for (let k = 0; k < this.cols; k++) {
-            if (!resolved[k]) {
+            if (!resolved_cells[k]) {
               row[k].value = null;
               continue;
             }
-            row[k].value = resolved[k].value;
-            transition[i].values.push({ from: resolved[k]?.index, to: k });
+            row[k].value = resolved_cells[k].value;
+            transition[i].values.push({
+              from: resolved_cells[k]?.index,
+              to: k,
+            });
           }
-          console.log("transition is", transition);
         }
 
         break;
       default:
-        console.log("Unknown direction");
         throw new Error("Provided direction is not supported");
     }
   }

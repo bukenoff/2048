@@ -1,5 +1,6 @@
 import "./style.css";
 import { Board } from "./board";
+import type { Direction } from "./types";
 
 const board = new Board();
 board.init();
@@ -105,7 +106,7 @@ function moveCell(
 
 function move(
   ctx: CanvasRenderingContext2D,
-  direction: "up" | "right" | "bottom" | "left",
+  direction: Direction,
   changes: any
 ) {
   switch (direction) {
