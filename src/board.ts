@@ -14,12 +14,30 @@ export type Coordinates = {
 };
 
 export class BoardTransition {
-  from: Coordinates;
-  to: Coordinates;
+  from: number;
+  to: number;
 
-  constructor(from: Coordinates, to: Coordinates) {
+  constructor(from: number, to: number) {
     this.from = from;
     this.to = to;
+  }
+}
+
+export class TransitionSet {
+  type: "vertical" | "horizontal";
+  value: (BoardTransition | null)[][];
+
+  constructor(type: "vertical" | "horizontal", size: number) {
+    this.type = type;
+    this.value = new Array(size);
+
+    for (let r = 0; r < size; r++) {
+      this.value[r] = [];
+    }
+  }
+
+  insert(index: number, transtiton: BoardTransition) {
+    this.value[index].push(transtiton);
   }
 }
 
@@ -72,13 +90,8 @@ export class Board {
     }
   }
 
-  move(direction: Direction) {
-    const transition: any = [
-      { values: [] },
-      { values: [] },
-      { values: [] },
-      { values: [] },
-    ];
+  move(direction: Direction): TransitionSet | null {
+    let transition_set: TransitionSet | null = null;
 
     switch (direction) {
       case "up":
@@ -91,6 +104,8 @@ export class Board {
         // TODO: Implelemt this
         break;
       case "left":
+        transition_set = new TransitionSet("horizontal", this.cols);
+
         for (let r = 0; r < this.rows; r++) {
           const unresolved_cells: Cell[] = [];
           const resolved_cells: Cell[] = [];
@@ -109,12 +124,17 @@ export class Board {
                 current_cell.value
             ) {
               const resolved_cell = unresolved_cells.pop();
+
               if (resolved_cell && resolved_cell.value) {
                 resolved_cell.value *= 2;
+                transition_set.insert(
+                  r,
+                  new BoardTransition(c, resolved_cells.length)
+                );
                 resolved_cells.push(resolved_cell);
               }
             } else {
-              unresolved_cells.push({ value: current_cell.value });
+              unresolved_cells.push(current_cell);
             }
           }
 
@@ -132,9 +152,11 @@ export class Board {
           }
         }
 
-        break;
+        return transition_set;
       default:
         throw new Error("Provided direction is not supported");
     }
+
+    return transition_set;
   }
 }

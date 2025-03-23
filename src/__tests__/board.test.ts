@@ -1,4 +1,4 @@
-import { Board, Coordinates } from "../board";
+import { Board, BoardTransition, Coordinates, TransitionSet } from "../board";
 
 export function getMockedBoard(predefined_cells: Coordinates[]) {
   const board: Board["value"] = [
@@ -105,5 +105,32 @@ describe("Board constructor", () => {
     board.move("left");
 
     expect(board.value[0][0].value).toBe(4);
+  });
+});
+
+describe("TransitionSet constructor", () => {
+  it("Should be defined", () => {
+    expect(TransitionSet).toBeDefined();
+  });
+
+  it("Should initalize with correct value", () => {
+    const transition_set = new TransitionSet("horizontal", 4);
+    expect(transition_set.value.length).toBe(4);
+  });
+
+  it("Should contain initial value with x empty arrays", () => {
+    const transition_set = new TransitionSet("horizontal", 4);
+
+    expect(
+      transition_set.value.every((item) => Array.isArray(item) && !item.length)
+    ).toBe(true);
+  });
+
+  it("Should insert values", () => {
+    const transition_set = new TransitionSet("horizontal", 4);
+
+    transition_set.insert(0, new BoardTransition(0, 1));
+
+    expect(transition_set.value[0][0]).toEqual({ from: 0, to: 1 });
   });
 });

@@ -5,11 +5,11 @@ import type { Direction } from "./types";
 const board = new Board();
 board.init();
 
-board.move("left");
+const transitions = board.move("left");
 
 console.log("board is", board);
+console.log("transitions are", transitions);
 
-console.log("board", board);
 let canvas: HTMLCanvasElement | null = null;
 
 function initCanvas(): CanvasRenderingContext2D {
