@@ -7,9 +7,10 @@ class Cell {
   }
 }
 
-type Coordinates = {
+export type Coordinates = {
   row: number;
   col: number;
+  value: number;
 };
 
 export class BoardTransition {
