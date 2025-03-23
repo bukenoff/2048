@@ -91,30 +91,30 @@ export class Board {
         // TODO: Implelemt this
         break;
       case "left":
-        for (let i = 0; i < this.rows; i++) {
-          const unresolved_cells: (Cell & { index: number })[] = [];
-          const resolved_cells: (Cell & { index: number })[] = [];
-          const row = this.value[i];
+        for (let r = 0; r < this.rows; r++) {
+          const unresolved_cells: Cell[] = [];
+          const resolved_cells: Cell[] = [];
+          const current_row = this.value[r];
 
-          for (let j = 0; j < this.cols; j++) {
-            const currentCell = this.value[i][j];
+          for (let c = 0; c < this.cols; c++) {
+            const current_cell = this.value[r][c];
 
-            if (currentCell.value === null) {
+            if (current_cell.value === null) {
               continue;
             }
 
             if (
               unresolved_cells.length &&
               unresolved_cells[unresolved_cells.length - 1].value ===
-                currentCell.value
+                current_cell.value
             ) {
-              const newlyResolvedValue = unresolved_cells.pop() as Cell & {
-                index: number;
-              };
-              (newlyResolvedValue.value as number) *= 2;
-              resolved_cells.push(newlyResolvedValue);
+              const resolved_cell = unresolved_cells.pop();
+              if (resolved_cell && resolved_cell.value) {
+                resolved_cell.value *= 2;
+                resolved_cells.push(resolved_cell);
+              }
             } else {
-              unresolved_cells.push({ value: currentCell.value, index: j });
+              unresolved_cells.push({ value: current_cell.value });
             }
           }
 
@@ -125,14 +125,10 @@ export class Board {
 
           for (let k = 0; k < this.cols; k++) {
             if (!resolved_cells[k]) {
-              row[k].value = null;
-              continue;
+              current_row[k].value = null;
+            } else {
+              current_row[k].value = resolved_cells[k].value;
             }
-            row[k].value = resolved_cells[k].value;
-            transition[i].values.push({
-              from: resolved_cells[k]?.index,
-              to: k,
-            });
           }
         }
 
