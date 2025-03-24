@@ -90,6 +90,56 @@ export class Board {
     }
   }
 
+  moveHorizontally(transition_set: TransitionSet, direction: Direction): void {
+    for (let r = 0; r < this.rows; r++) {
+      const unresolved_cells: Cell[] = [];
+      const resolved_cells: Cell[] = [];
+      const current_row = this.value[r];
+
+      for (let c = 0; c < this.cols; c++) {
+        const current_cell = this.value[r][c];
+
+        if (current_cell.value === null) {
+          continue;
+        }
+
+        if (
+          unresolved_cells.length &&
+          unresolved_cells[unresolved_cells.length - 1].value ===
+            current_cell.value
+        ) {
+          const resolved_cell = unresolved_cells.pop();
+
+          if (resolved_cell && resolved_cell.value) {
+            resolved_cell.value *= 2;
+            transition_set.insert(
+              r,
+              new BoardTransition(c, resolved_cells.length)
+            );
+            resolved_cells.push(resolved_cell);
+          }
+        } else {
+          unresolved_cells.push(current_cell);
+        }
+      }
+
+      while (unresolved_cells.length) {
+        const current = unresolved_cells.shift();
+        current && resolved_cells.push(current);
+      }
+
+      for (let k = 0; k < this.cols; k++) {
+        const insertion_index = direction === "right" ? this.cols - k - 1 : k;
+
+        if (resolved_cells[k]) {
+          current_row[insertion_index].value = resolved_cells[k].value;
+        } else {
+          current_row[insertion_index].value = null;
+        }
+      }
+    }
+  }
+
   move(direction: Direction): TransitionSet | null {
     let transition_set: TransitionSet | null = null;
 
@@ -100,51 +150,7 @@ export class Board {
       case "right":
         transition_set = new TransitionSet("horizontal", this.cols);
 
-        for (let r = 0; r < this.rows; r++) {
-          const unresolved_cells: Cell[] = [];
-          const resolved_cells: Cell[] = [];
-          const current_row = this.value[r];
-
-          for (let c = 0; c < this.cols; c++) {
-            const current_cell = this.value[r][c];
-
-            if (current_cell.value === null) {
-              continue;
-            }
-
-            if (
-              unresolved_cells.length &&
-              unresolved_cells[unresolved_cells.length - 1].value ===
-                current_cell.value
-            ) {
-              const resolved_cell = unresolved_cells.pop();
-
-              if (resolved_cell && resolved_cell.value) {
-                resolved_cell.value *= 2;
-                transition_set.insert(
-                  r,
-                  new BoardTransition(c, resolved_cells.length)
-                );
-                resolved_cells.push(resolved_cell);
-              }
-            } else {
-              unresolved_cells.push(current_cell);
-            }
-          }
-
-          while (unresolved_cells.length) {
-            const current = unresolved_cells.shift();
-            current && resolved_cells.push(current);
-          }
-          console.log("resolved_cells", resolved_cells);
-          for (let k = 0; k < this.cols; k++) {
-            if (resolved_cells[k]) {
-              current_row[this.cols - k - 1].value = resolved_cells[k].value;
-            } else {
-              current_row[this.cols - k - 1].value = null;
-            }
-          }
-        }
+        this.moveHorizontally(transition_set, "right");
 
         return transition_set;
       case "bottom":
@@ -153,51 +159,7 @@ export class Board {
       case "left":
         transition_set = new TransitionSet("horizontal", this.cols);
 
-        for (let r = 0; r < this.rows; r++) {
-          const unresolved_cells: Cell[] = [];
-          const resolved_cells: Cell[] = [];
-          const current_row = this.value[r];
-
-          for (let c = 0; c < this.cols; c++) {
-            const current_cell = this.value[r][c];
-
-            if (current_cell.value === null) {
-              continue;
-            }
-
-            if (
-              unresolved_cells.length &&
-              unresolved_cells[unresolved_cells.length - 1].value ===
-                current_cell.value
-            ) {
-              const resolved_cell = unresolved_cells.pop();
-
-              if (resolved_cell && resolved_cell.value) {
-                resolved_cell.value *= 2;
-                transition_set.insert(
-                  r,
-                  new BoardTransition(c, resolved_cells.length)
-                );
-                resolved_cells.push(resolved_cell);
-              }
-            } else {
-              unresolved_cells.push(current_cell);
-            }
-          }
-
-          while (unresolved_cells.length) {
-            const current = unresolved_cells.shift();
-            current && resolved_cells.push(current);
-          }
-
-          for (let k = 0; k < this.cols; k++) {
-            if (resolved_cells[k]) {
-              current_row[k].value = resolved_cells[k].value;
-            } else {
-              current_row[k].value = null;
-            }
-          }
-        }
+        this.moveHorizontally(transition_set, "left");
 
         return transition_set;
       default:
