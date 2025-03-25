@@ -5,11 +5,6 @@ import type { Direction } from "./types";
 const board = new Board();
 board.init();
 
-const transitions = board.move("left");
-
-console.log("board is", board);
-console.log("transitions are", transitions);
-
 let canvas: HTMLCanvasElement | null = null;
 
 function initCanvas(): CanvasRenderingContext2D {
@@ -44,25 +39,19 @@ function drawBlocks(ctx: CanvasRenderingContext2D) {
 
     for (let j = 0; j < 4; j++) {
       x += 5;
-      ctx.fillStyle = "rgba(238, 228, 218, 0.35)";
       if (board.value[i][j].value) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "black";
+        ctx.font = "24px serif";
+        ctx.fillText(board.value[i][j].value, x + 35, y + 45);
       }
+      ctx.fillStyle = "rgba(238, 228, 218, 0.35)";
       ctx.fillRect(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
       x += BLOCK_WIDTH;
     }
-    console.log("y is", y);
   }
-}
 
-const myChanges = [
-  {
-    moves: [{ start: 0, end: 3 }],
-  },
-  null,
-  null,
-  null,
-];
+  requestAnimationFrame(() => drawBlocks(ctx));
+}
 
 function redrawBoard(ctx: CanvasRenderingContext2D) {
   if (!canvas) {
@@ -127,7 +116,7 @@ function move(
       });
 
       break;
-    case "bottom":
+    case "down":
       break;
     case "left":
       break;
@@ -141,9 +130,32 @@ function init() {
   drawBlocks(ctx);
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") {
-      move(ctx, "right", myChanges);
+    console.log("event");
+    switch (event.key) {
+      case "ArrowRight":
+      case "l":
+        board.move("right");
+        break;
+      case "ArrowLeft":
+      case "h":
+        board.move("left");
+        break;
+      case "ArrowUp":
+      case "k":
+        board.move("up");
+        break;
+      case "ArrowDown":
+      case "j":
+        board.move("down");
+        break;
+
+      default:
+        console.log(`No event attached to ${event.key}`);
     }
+    //if (event.key === "ArrowRight") {
+    //  //move(ctx, "right", myChanges);
+    //  board.move("right");
+    //}
   });
 }
 

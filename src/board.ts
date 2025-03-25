@@ -197,31 +197,33 @@ export class Board {
         transition_set = new TransitionSet("vertical", this.cols);
 
         this.moveVerically(transition_set, "up");
+        this.randomlyAddValuesToCells(1);
 
         return transition_set;
       case "right":
         transition_set = new TransitionSet("horizontal", this.cols);
 
         this.moveHorizontally(transition_set, "right");
+        this.randomlyAddValuesToCells(1);
 
         return transition_set;
       case "down":
         transition_set = new TransitionSet("vertical", this.cols);
 
         this.moveVerically(transition_set, "down");
+        this.randomlyAddValuesToCells(1);
 
         return transition_set;
       case "left":
         transition_set = new TransitionSet("horizontal", this.cols);
 
         this.moveHorizontally(transition_set, "left");
+        this.randomlyAddValuesToCells(1);
 
         return transition_set;
       default:
         throw new Error("Provided direction is not supported");
     }
-
-    return transition_set;
   }
 
   print() {
