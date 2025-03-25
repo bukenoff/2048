@@ -1,1 +1,1 @@
-export type Direction = "up" | "right" | "bottom" | "left";
+export type Direction = "up" | "right" | "down" | "left";

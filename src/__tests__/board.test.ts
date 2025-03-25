@@ -142,6 +142,34 @@ describe("Board constructor", () => {
 
     expect(board.value[0][3].value).toBe(4);
   });
+
+  it("Should collapse two cells at indexes 0-1 with the same value if I move down", () => {
+    const board = new Board();
+    board.value = getMockedBoard([
+      { row: 0, col: 0, value: 2 },
+      { row: 1, col: 0, value: 2 },
+    ]);
+
+    board.move("down");
+
+    expect(board.value[3][0].value).toBe(4);
+  });
+
+  it("Should collapse two cells at indexes 0-1 with the same value if I move up", () => {
+    const board = new Board();
+    board.value = getMockedBoard([
+      { row: 0, col: 0, value: 2 },
+      { row: 1, col: 0, value: 2 },
+    ]);
+
+    console.log("*** before ***");
+    board.print();
+    board.move("up");
+    console.log("*** after ***");
+    board.print();
+
+    expect(board.value[0][0].value).toBe(4);
+  });
 });
 
 describe("TransitionSet constructor", () => {
