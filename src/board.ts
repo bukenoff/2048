@@ -82,8 +82,8 @@ export class Board {
         continue;
       }
 
-      const randomValue = 2;
-      possibleValues[Math.floor(Math.random() * possibleValues.length)];
+      const randomValue =
+        possibleValues[Math.floor(Math.random() * possibleValues.length)];
       randomCell.value = randomValue;
 
       cellsAdded += 1;
