@@ -1,6 +1,6 @@
 import { Board, BoardTransition, Coordinates, TransitionSet } from "../board";
 
-export function getMockedBoard(predefined_cells: Coordinates[]) {
+export function getMockedBoard(predefined_cells: number[][]) {
   const board: Board["value"] = [
     [{ value: null }, { value: null }, { value: null }, { value: null }],
     [{ value: null }, { value: null }, { value: null }, { value: null }],
@@ -8,8 +8,11 @@ export function getMockedBoard(predefined_cells: Coordinates[]) {
     [{ value: null }, { value: null }, { value: null }, { value: null }],
   ];
 
-  predefined_cells.forEach(({ row, col, value }) => {
-    board[row][col].value = value;
+  predefined_cells.forEach((row, row_index) => {
+    row.forEach((col, col_index) => {
+      if (!col) return;
+      board[row_index][col_index].value = col;
+    });
   });
 
   return board;
@@ -38,11 +41,13 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-1 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 1, value: 2 },
+      [2, 2, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
-    board.move("left");
+    board.move("left", false);
 
     expect(board.value[0][0].value).toBe(4);
   });
@@ -50,8 +55,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-2 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 2, value: 2 },
+      [2, 0, 2, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("left");
@@ -62,8 +69,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-3 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 3, value: 2 },
+      [2, 0, 0, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("left");
@@ -74,8 +83,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 1-2 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 1, value: 2 },
-      { row: 0, col: 2, value: 2 },
+      [0, 2, 2, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("left");
@@ -86,8 +97,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 1-3 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 1, value: 2 },
-      { row: 0, col: 3, value: 2 },
+      [0, 2, 0, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("left");
@@ -98,8 +111,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 2-3 with the same value if I move left", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 2, value: 2 },
-      { row: 0, col: 3, value: 2 },
+      [0, 0, 2, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("left");
@@ -110,8 +125,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-1 with the same value if I move right", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 1, value: 2 },
+      [0, 2, 2, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("right");
@@ -122,8 +139,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-2 with the same value if I move right", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 2, value: 2 },
+      [2, 0, 2, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("right");
@@ -134,8 +153,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-3 with the same value if I move right", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 0, col: 3, value: 2 },
+      [2, 0, 0, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("right");
@@ -146,8 +167,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-1 with the same value if I move down", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 1, col: 0, value: 2 },
+      [2, 0, 0, 0],
+      [2, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     board.move("down");
@@ -158,8 +181,10 @@ describe("Board constructor", () => {
   it("Should collapse two cells at indexes 0-1 with the same value if I move up", () => {
     const board = new Board();
     board.value = getMockedBoard([
-      { row: 0, col: 0, value: 2 },
-      { row: 1, col: 0, value: 2 },
+      [2, 0, 0, 0],
+      [2, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
 
     console.log("*** before ***");

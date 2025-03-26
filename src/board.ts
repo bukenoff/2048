@@ -189,7 +189,7 @@ export class Board {
     }
   }
 
-  move(direction: Direction): TransitionSet | null {
+  move(direction: Direction, shouldAddRandomCell = true): TransitionSet | null {
     let transition_set: TransitionSet | null = null;
 
     switch (direction) {
@@ -197,28 +197,36 @@ export class Board {
         transition_set = new TransitionSet("vertical", this.cols);
 
         this.moveVerically(transition_set, "up");
-        this.randomlyAddValuesToCells(1);
+        if (shouldAddRandomCell) {
+          this.randomlyAddValuesToCells(1);
+        }
 
         return transition_set;
       case "right":
         transition_set = new TransitionSet("horizontal", this.cols);
 
         this.moveHorizontally(transition_set, "right");
-        this.randomlyAddValuesToCells(1);
+        if (shouldAddRandomCell) {
+          this.randomlyAddValuesToCells(1);
+        }
 
         return transition_set;
       case "down":
         transition_set = new TransitionSet("vertical", this.cols);
 
         this.moveVerically(transition_set, "down");
-        this.randomlyAddValuesToCells(1);
+        if (shouldAddRandomCell) {
+          this.randomlyAddValuesToCells(1);
+        }
 
         return transition_set;
       case "left":
         transition_set = new TransitionSet("horizontal", this.cols);
 
         this.moveHorizontally(transition_set, "left");
-        this.randomlyAddValuesToCells(1);
+        if (shouldAddRandomCell) {
+          this.randomlyAddValuesToCells(1);
+        }
 
         return transition_set;
       default:
