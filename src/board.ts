@@ -189,7 +189,7 @@ export class Board {
     }
   }
 
-  move(direction: Direction, shouldAddRandomCell = true): TransitionSet | null {
+  move(direction: Direction, shouldAddRandomCell = true): TransitionSet {
     let transition_set: TransitionSet | null = null;
 
     switch (direction) {
