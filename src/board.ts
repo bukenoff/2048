@@ -2,7 +2,12 @@ import type { Direction } from "./types";
 
 class Cell {
   value: number | null;
-  constructor(value = null) {
+  row: number;
+  col: number;
+
+  constructor(row: number, col: number, value = null) {
+    this.row = row;
+    this.col = col;
     this.value = value;
   }
 }
@@ -54,15 +59,19 @@ export class Board {
   }
 
   init() {
+    this.makeEmptyBoard();
+    this.randomlyAddValuesToCells(2);
+  }
+
+  makeEmptyBoard() {
     for (let i = 0; i < this.rows; i++) {
       const newRow = new Array(this.cols);
       this.value[i] = newRow;
 
       for (let j = 0; j < this.cols; j++) {
-        newRow[j] = new Cell();
+        newRow[j] = new Cell(i, j);
       }
     }
-    this.randomlyAddValuesToCells(2);
   }
 
   getRandomPosition(range: number) {

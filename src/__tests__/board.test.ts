@@ -1,21 +1,17 @@
 import { Board, BoardTransition, Coordinates, TransitionSet } from "../board";
 
 export function getMockedBoard(predefined_cells: number[][]) {
-  const board: Board["value"] = [
-    [{ value: null }, { value: null }, { value: null }, { value: null }],
-    [{ value: null }, { value: null }, { value: null }, { value: null }],
-    [{ value: null }, { value: null }, { value: null }, { value: null }],
-    [{ value: null }, { value: null }, { value: null }, { value: null }],
-  ];
+  const board = new Board();
+  board.makeEmptyBoard();
 
   predefined_cells.forEach((row, row_index) => {
     row.forEach((col, col_index) => {
       if (!col) return;
-      board[row_index][col_index].value = col;
+      board.value[row_index][col_index].value = col;
     });
   });
 
-  return board;
+  return board.value;
 }
 
 describe("Board constructor", () => {
