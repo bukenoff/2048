@@ -36,8 +36,9 @@ export class TransitionSet {
     }
   }
 
-  insert(index: number, transtiton: BoardTransition) {
-    this.value[index].push(transtiton);
+  insert(value_index: number, index_start: number, index_end: number) {
+    const new_transition = new BoardTransition(index_start, index_end);
+    this.value[value_index].push(new_transition);
   }
 }
 
@@ -111,10 +112,7 @@ export class Board {
 
           if (resolved_cell && resolved_cell.value) {
             resolved_cell.value *= 2;
-            transition_set.insert(
-              c,
-              new BoardTransition(c, resolved_cells.length)
-            );
+            transition_set.insert(c, c, resolved_cells.length);
             resolved_cells.push(resolved_cell);
           }
         } else {
@@ -124,6 +122,7 @@ export class Board {
 
       while (unresolved_cells.length) {
         const current = unresolved_cells.shift();
+        transition_set.insert(c, c, resolved_cells.length);
         current && resolved_cells.push(current);
       }
 
@@ -161,10 +160,7 @@ export class Board {
 
           if (resolved_cell && resolved_cell.value) {
             resolved_cell.value *= 2;
-            transition_set.insert(
-              r,
-              new BoardTransition(c, resolved_cells.length)
-            );
+            transition_set.insert(r, c, resolved_cells.length);
             resolved_cells.push(resolved_cell);
           }
         } else {

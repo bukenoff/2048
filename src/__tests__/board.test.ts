@@ -187,13 +187,25 @@ describe("Board constructor", () => {
       [0, 0, 0, 0],
     ]);
 
-    console.log("*** before ***");
-    board.print();
     board.move("up");
-    console.log("*** after ***");
-    board.print();
 
     expect(board.value[0][0].value).toBe(4);
+  });
+
+  /* Transitions */
+
+  it("Should create multiple transitions", () => {
+    const board = new Board();
+    board.value = getMockedBoard([
+      [4, 2, 2, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]);
+
+    const transition_set = board.move("right");
+
+    expect(transition_set.value[0].length).toBe(2);
   });
 });
 
@@ -218,7 +230,7 @@ describe("TransitionSet constructor", () => {
   it("Should insert values", () => {
     const transition_set = new TransitionSet("horizontal", 4);
 
-    transition_set.insert(0, new BoardTransition(0, 1));
+    transition_set.insert(0, 0, 1);
 
     expect(transition_set.value[0][0]).toEqual({ from: 0, to: 1 });
   });
